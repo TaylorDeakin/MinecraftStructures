@@ -1,0 +1,164 @@
+body {
+  background: $color-initial;
+  margin: 0;
+  background: #f4f4f4;
+}
+
+header {
+  margin: 0 0 20px 0;
+}
+
+footer {
+  margin-top: 40px;
+}
+
+.category-listing {
+
+}
+
+%card {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px 6px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.list-box {
+  @extend %card;
+  margin-bottom: 24px;
+
+  & ul, p {
+    margin-bottom: 0;
+  }
+
+  & h3 {
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  & img {
+    height: 100px;
+    object-fit: cover;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    display: flex;
+  }
+
+  & .row .column {
+    margin-bottom: 0;
+  }
+
+}
+
+.sidebar-box {
+  font-size: 1.4rem;
+  & p {
+    font-size: 1.5rem;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 0;
+
+    @media (min-width: 40.0rem) {
+      width: 160px;
+    }
+  }
+
+  & img {
+    height: 60px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .column {
+    margin: 0;
+    padding: 0 0.5rem;
+  }
+}
+
+.structure-box {
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid #e5e5e5;
+
+  h2 {
+    padding: 12px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 2rem;
+  }
+
+  .profile-box {
+    color: #333;
+    padding-bottom: 2.67px;
+    img {
+      float: left;
+      height: 50px;
+      width: 50px;
+    }
+
+    .username {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: -10px;
+
+      & a:hover {
+        color: #333;
+      }
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+  }
+}
+
+.profile {
+  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid #e5e5e5;
+  padding: 12px;
+  align-items: flex-start;
+  height: 100%;
+  position: relative;
+
+  &-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  &-header{
+    margin: -12px;
+    margin-bottom: -60px;
+  }
+
+  .profile-box {
+    position: relative;
+    top: -80px;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: rgba(16, 16, 16, 0.9);
+    color: #eee;
+
+    padding: 6px;
+
+    h4 {
+      font-size: 2.3rem;
+      margin-bottom: 0;
+    }
+
+    .profile-title {
+      margin-bottom: 0;
+      font-size: 1.8rem;
+      color: #ddd;
+    }
+
+    @media (max-width: 65em){
+      .profile-title{
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+}

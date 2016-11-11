@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Log in</title>
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+
+  {% include 'partials/header.twig' %}
+  <div class="container">
+  <section class="row">
+    <div class="column column-40">
+      <h2>Log In</h2>
+      <form action="/login" method="post">
+        <label for="username">Username</label>
+        <input class="form-control" type="text" name="username" id="username" required>
+        <label for="password">Password</label>
+        <input class="form-control" type="password" name="password" id="password" required>
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+    <aside class="column">
+
+    </aside>
+  </section>
+</div>
+</body>
+</html>

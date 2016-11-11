@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.quilljs.com/1.1.5/quill.snow.css" rel="stylesheet">
+  <title>Profile Editor</title>
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+{% include 'partials/header.twig' %}
+<div class="container">
+  <div class="row">
+    <div class="column">
+      <form action="/account/dashboard/submit" method="post" id="profile-form">
+        <label for="profile-blurb">About Me</label>
+        <textarea name="profile-blurb" id="profile-blurb" cols="30" rows="10" hidden></textarea>
+
+        <!-- Create the editor container -->
+        <div id="editor">
+          {{ user.profiletext|raw }}
+        </div>
+
+        <!-- Include the Quill library -->
+
+        <label for="twitter">Twitter Username</label>
+        <input id="twitter" name="twitter" type="text"
+               value="{{ user.twitter }}">
+        <label for="youtube">Youtube Channel</label>
+        <input id="youtube" name="youtube" type="text"
+               value="{{ user.youtube }}">
+        <label for="facebook">Facebook Page</label>
+        <input id="facebook" name="facebook" type="text"
+               value="{{ user.facebook }}">
+        <label for="website">Personal Website</label>
+        <input id="website" name="website" type="text"
+               value="{{ user.website }}">
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.1.5/quill.js"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+  var quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+
+  function processForm(e) {
+    var profileBlurb = quill.root.innerHTML;
+    console.log(profileBlurb);
+    document.getElementById("profile-blurb").value = profileBlurb;
+  }
+
+  var form = document.getElementById('profile-form');
+  if (form.attachEvent) {
+    form.attachEvent("submit", processForm);
+  } else {
+    form.addEventListener("submit", processForm);
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ user.username }} | Minecraft Structures</title>
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+{% include 'partials/header.twig' %}
+<div class="container">
+  <div class="row">
+    <aside class="sidebar profile column column-25">
+      <div class="profile-header">
+        {% if user.profileImage %}
+          <img src="{{ user.profileImage }}" alt="{{ user.username }}" class="profile-img">
+        {% else %}
+          <img src="https://minotar.net/avatar/{{ user.username }}" alt="{{ user.username }}" class="profile-img">
+        {% endif %}
+        <div class="profile-box">
+          <h4>{{ user.username }}</h4>
+          <p class="profile-title">Level {{ user.level }}: {{ user.title }}</p>
+        </div>
+      </div>
+      <a href="/account/dashboard/edit" class="button button-block" role="button">Edit Profile</a>
+      <h3>About</h3>
+      <p>{{ user.blurb|raw}}</p>
+
+      <ul class="list-unstyled">
+        {% for socialItem in user.socialLinks %}
+          <li><a href="{{ socialItem.url }}">{{ socialItem.name }}</a></li>
+        {% endfor %}
+      </ul>
+      <h3>User Stats</h3>
+      <ul class="list-unstyled">
+        <li><span class="text-emphasis">{{ structureList|length }}</span> Structures</li>
+        <li><span class="text-emphasis">819</span> Likes</li>
+        <li><span class="text-emphasis">675</span> Downloads</li>
+        <li></li>
+        <li></li>
+      </ul>
+    </aside>
+    <div class="column">
+      {% if structureList|length > 0 %}
+        {% for structure in structureList if structure.name %}
+          <div class="row list-box">
+            <div class="column column-33">
+              <img src="/img/{{ structure.mainImage }}" alt="{{ structure.name }}" class="img-thumb">
+            </div>
+            <div class="column">
+              <h3><a href="/structure/{{ structure.url }}">{{ structure.name }}</a></h3>
+              <ul class="list-unstyled list-inline">
+                <li>{{ structure.views }} Views</li>
+                <li>{{ structure.downloads }} Downloads</li>
+                <li>{{ structure.likes }} Likes</li>
+              </ul>
+              <p>
+                <a href="account/edit/{{ structure.id }}">Edit</a>
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>It's a bit empty here... <a href="/thing">Add a new structure?</a></p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Minecraft Structures</title>
+  {% include 'partials/head.twig' %}
+
+</head>
+<body>
+{% include 'partials/header.twig' %}
+<div class="container">
+  <div class="row">
+    <div class="column column-75">
+      <div class="Wallop Wallop--fade">
+        <div class="Wallop-list">
+          {% for sliderItem in sliderList %}
+            <div class="Wallop-item">
+              <img src="/img/{{ sliderItem.mainImage }}" class="slider-img" alt="{{ sliderItem.name }}">
+              <div class="slider-box">
+                <p><a href="/structure/{{ sliderItem.url }}">{{ sliderItem.name }}, by {{ sliderItem.username }}</a></p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button class="Wallop-buttonPrevious">Previous</button>
+        <button class="Wallop-buttonNext">Next</button>
+      </div>
+      {% for category in categoryListing %}
+        <h3>Most Popular in {{ category.name }}:</h3>
+        <div class="row list-box">
+          {% for structure in category if structure.name %}
+            <div class="column">
+              <img class="img-thumb" src="/img/{{ structure.mainImage }}" alt="{{ structure.name }}">
+              <p><a href="/structure/{{ structure.url }}">{{ structure.name }}</a></p>
+              <p>{{ structure.category }}</p>
+
+            </div>
+          {% endfor %}
+
+        </div>
+
+      {% endfor %}
+
+
+    </div>
+    <aside class="sidebar column">
+      {% include 'partials/sidebar-parts.twig' %}
+    </aside>
+  </div>
+
+  {% include 'partials/footer.twig' %}
+</div>
+</body>
+</html>

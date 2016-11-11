@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ user.username }} | MCStructures</title>
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+{% include 'partials/header.twig' %}
+<div class="container">
+  <section class="row">
+    <aside class="sidebar profile column column-25">
+      <div class="profile-header">
+        <img class="profile-img" src="{{ user.profileImage }}" alt="{{ user.username }}">
+        <div class="profile-box">
+          <h4>{{ user.username }}</h4>
+          <p class="profile-title">Level {{ user.level }}: {{ user.title }}</p>
+        </div>
+      </div>
+      <h3>About</h3>
+      <p>{{ user.blurb }}</p>
+      <ul class="list-unstyled">
+        {% for socialItem in user.socialLinks %}
+          <li><a href="{{ socialItem.url }}">{{ socialItem.name }}</a></li>
+        {% endfor %}
+      </ul>
+      <h3>User Stats</h3>
+      <ul class="list-unstyled">
+        <li><span class="text-emphasis">{{ structureList|length }}</span> Structures</li>
+        <li><span class="text-emphasis">819</span> Likes</li>
+        <li><span class="text-emphasis">675</span> Downloads</li>
+        <li></li>
+        <li></li>
+      </ul>
+    </aside>
+    <div class="content column">
+      {% for structure in structureList %}
+        <div class="row list-box">
+          <div class="column column-33">
+            <img src="/img/{{ structure.mainImage }}" alt="{{ structure.name }}" class="img-thumb">
+          </div>
+          <div class="column">
+            <h3><a href="/structure/{{ structure.url }}">{{ structure.name }}</a></h3>
+            <ul class="list-unstyled list-inline">
+              <li>{{ structure.views }} Views</li>
+              <li>{{ structure.downloads }} Downloads</li>
+              <li>{{ structure.likes }} Likes</li>
+            </ul>
+            <p>By <a href="/profile/{{ structure.username }}">{{ structure.username }}</a></p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

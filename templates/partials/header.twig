@@ -1,0 +1,45 @@
+<header>
+  <div class="navbar">
+    <div class="container">
+      <div class="row">
+        <div class="column column-75"><h1>Minecraft Structures</h1></div>
+        <div class="column column-25">
+          <nav>
+            <a href="/">Home</a>
+            <a href="">Browse</a>
+            {% if not loggedIn %}
+              <a href="/login">Log In</a>
+            {% else %}
+              <a href="/account/dashboard">Account</a>
+            {% endif %}
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if categoryMenu %}
+    <div class="navbar navbar-browse">
+      <div class="container">
+        <div class="row">
+          <div class="column column-75">
+            <nav>
+              {% for category in categoryMenu %}
+                {% if category.selected %}
+                  <a class="active" href="/category/{{ category.url }}">{{ category.name }}</a>
+                {% else %}
+                  <a href="/category/{{ category.url }}">{{ category.name }}</a>
+                {% endif %}
+              {% endfor %}
+            </nav>
+          </div>
+          <div class="column column-25">
+            <form class="navbar-form">
+              <input name="search" id="search" type="text" title="Search">
+              <button type="submit">Go</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</header>

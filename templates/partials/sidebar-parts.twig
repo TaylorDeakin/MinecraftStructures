@@ -1,0 +1,14 @@
+<h3>Latest Structures</h3>
+{% for structure in latestStructures %}
+  <div class="row sidebar-box">
+    <div class="column column-33">
+      <img src="../img/{{ structure.mainImage }}" alt="{{ structure.name }}"
+                                       class="img-thumb"></div>
+    <div class="column column-67">
+      <p><a href="{{ structure.url }}">{{ structure.name }}</a></p>
+      <p>By <a href="../../profile/{{ structure.username }}">{{ structure.username }}</a></p></div>
+
+
+  </div>
+
+{% endfor %}

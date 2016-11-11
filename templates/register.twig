@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+
+{% include 'partials/header.twig' %}
+<div class="container">
+  <section class="row">
+    <div class="column ">
+      <h2>Join Minecraft Structures.com</h2>
+      <p>Please ensure that you enter a valid email address so that you can activate your account</p>
+      <form action="/register" method="post">
+        <label for="username">Username</label>
+        <input class="form-control" type="text" name="username" id="username" required>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+        <label for="password">Password</label>
+        <input class="form-control" type="password" name="password" id="password" required>
+        <label for="password">Confirm Password</label>
+        <input class="form-control" type="password" name="password-confirm" id="password" required>
+        <button type="submit">Register!</button>
+      </form>
+    </div>
+  </section>
+</div>
+</body>
+</html>

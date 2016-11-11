@@ -1,0 +1,16 @@
+<footer>
+    <a href="/public/">Home</a>
+</footer>
+<script src="/polyfill.object-fit.min.js"></script>
+<script>
+    objectFit.polyfill({
+        selector: 'img', // this can be any CSS selector
+        fittype: 'cover', // either contain, cover, fill or none
+        disableCrossDomain: 'true' // either 'true' or 'false' to not parse external CSS files.
+    });
+</script>
+<script src="/Wallop.min.js"></script>
+<script>
+    var wallopEl = document.querySelector('.Wallop');
+    var slider = new Wallop(wallopEl);
+</script>

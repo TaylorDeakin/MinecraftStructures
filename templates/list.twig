@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ listName }} | MC Structures</title>
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+{% include 'partials/header.twig' %}
+<div class="container">
+  <div class="row">
+    <div class="column column-75">
+      {% for structure in structureList %}
+        <div class="row list-box">
+          <div class="column column-33">
+            <img src="/img/{{ structure.mainImage }}" alt="{{ structure.name }}" class="img-thumb">
+          </div>
+          <div class="column">
+            <h3><a href="/structure/{{ structure.url }}">{{ structure.name }}</a></h3>
+            <ul class="list-unstyled list-inline">
+              <li>{{ structure.views }} Views</li>
+              <li>{{ structure.downloads }} Downloads</li>
+              <li>{{ structure.likes }} Likes</li>
+            </ul>
+            <p>By <a href="/profile/{{ structure.username }}">{{ structure.username }}</a></p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <aside class="sidebar column">
+
+    </aside>
+  </div>
+
+  {% include 'partials/footer.twig' %}
+</div>
+</body>
+</html>

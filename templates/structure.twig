@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% include '/partials/head.twig' %}
+  <meta charset="UTF-8">
+  <title>Structure {{ current.name }}</title>
+</head>
+<body>
+{% include '/partials/header.twig' %}
+<div class="container">
+  <section class="row">
+    <div class="column column-75">
+      <div class="structure-box">
+
+        <img class="img-main" src="../img/{{ current.mainImage }}" alt="{{ current.name }}">
+        <h2>{{ current.name }}</h2>
+      </div>
+      <div class="row">
+        <div class="column column-75">
+          <div class="row">
+            <div class="column"><p>{{ current.description }}</p></div>
+          </div>
+
+        </div>
+        <aside class="sidebar column">
+            <img class="img-thumb" src="{{ current.image }}" alt="{{ current.username }}">
+            <p class="username"><a href="/profile/{{ current.username }}">{{ current.username }}</a></p>
+            <p>Level {{ current.level }} : {{ current.title }}</p>
+          <h4>Download</h4>
+          <a href="{{ file }}">Minecraft Structure File</a>
+
+          <h4>Statistics</h4>
+          <ul class="list-unstyled">
+            <li><span class="text-emphasis">{{ current.views }}</span> Views</li>
+            <li><span class="text-emphasis">{{ current.downloads }}</span> Downloads</li>
+            <li><span class="text-emphasis">{{ current.likes }}</span> Likes</li>
+          </ul>
+        </aside>
+
+      </div>
+    </div>
+    <aside class="sidebar column">
+      {% include 'partials/sidebar-parts.twig' %}
+      <h3>More Structures by {{ current.username }}</h3>
+      {% for structure in otherStructures %}
+        <div class="row sidebar-box">
+          <div class="column column-33">
+            <img class="img-thumb" src="../img/{{ structure.mainImage }}" alt="{{ structure.name }}">
+          </div>
+          <div class="column column-66">
+            <p><a href="{{ structure.url }}">{{ structure.name }}</a></p>
+            <p>{{ structure.downloads }} Downloads</p>
+          </div>
+        </div>
+
+
+
+      {% endfor %}
+    </aside>
+
+  </section>
+</div>
+{% include 'partials/footer.twig' %}
+
+</body>
+</html>
+
