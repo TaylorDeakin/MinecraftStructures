@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Structure Editor</title>
+  <link href="https://cdn.quilljs.com/1.1.5/quill.snow.css" rel="stylesheet">
+  {% include 'partials/head.twig' %}
+</head>
+<body>
+{% include 'partials/header.twig' %}
+
+<div class="container">
+  <div class="row">
+    <div class="column"><h2>Submit a New Structure:</h2></div>
+  </div>
+  <form action="/account/structure/submit" method="post">
+    <div class="row">
+      <div class="column column-75">
+        <label for="structureName">Structure Name</label>
+        <input id="structureName" name="structureName" type="text" class="input-fullwidth">
+        <label for="structureDescription">Structure Description</label>
+        <textarea name="structureDescription" id="structureDescription" cols="30" rows="10" hidden></textarea>
+        <!-- Create the editor container -->
+        <div id="editor">
+          {{ structure.description|raw }}
+        </div>
+
+        <button type="submit">Submit</button>
+      </div>
+      <div class="column">
+        <!-- structure image-->
+        <label for="structureImage">Structure Image</label>
+        <input id="structureImage" name="structureImage" type="file">
+        <!-- structure file-->
+        <label for="structureFile">Structure File</label>
+        <input id="structureFile" name="structureFile" type="file">
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<script src="https://cdn.quilljs.com/1.1.5/quill.js"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+  var quill = new Quill('#editor', {
+    modules: {
+      toolbar: [
+
+        ['bold', 'italic', 'underline', 'link'],
+        [{list: 'ordered'}, {list: 'bullet'}],
+        ['clean']
+      ]
+    },
+    theme: 'snow'
+  });
+
+  function processForm(e) {
+    var profileBlurb = quill.root.innerHTML;
+    console.log(profileBlurb);
+    document.getElementById("profile-blurb").value = profileBlurb;
+  }
+
+  var form = document.getElementById('profile-form');
+  if (form.attachEvent) {
+    form.attachEvent("submit", processForm);
+  } else {
+    form.addEventListener("submit", processForm);
+  }
+
+</script>
+</body>
+</html>

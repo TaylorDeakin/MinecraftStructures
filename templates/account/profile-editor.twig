@@ -10,8 +10,12 @@
 {% include 'partials/header.twig' %}
 <div class="container">
   <div class="row">
-    <div class="column">
-      <form action="/account/dashboard/submit" method="post" id="profile-form">
+    <div class="column"><h2>Edit Your Profile</h2></div>
+  </div>
+  <form action="/account/dashboard/submit" method="post" id="profile-form" enctype="multipart/form-data">
+    <div class="row">
+      <div class="column column-75">
+
         <label for="profile-blurb">About Me</label>
         <textarea name="profile-blurb" id="profile-blurb" cols="30" rows="10" hidden></textarea>
 
@@ -21,6 +25,30 @@
         </div>
 
         <!-- Include the Quill library -->
+        <button type="submit">Submit</button>
+
+      </div>
+      <div class="column">
+        {% if user.image %}
+          <img id="output" class="img-main" src="/img/{{ user.image }}" alt="{{ username }}">
+        {% else %}
+          <img id="output" class="img-main" src="https://minotar.net/avatar/{{ user.username }}/64.png">
+        {% endif %}
+        <label for="avatar">
+          <br>Change your avatar
+          <input type="file" accept="image/*" name="avatar" id="avatar" onchange="loadFile(event)">
+        </label>
+
+        <label for="class">Class</label>
+        <select name="class" id="class">
+          {% for class in classList %}
+            {% if loop.index0 == user.class %}
+              <option selected value="{{ loop.index0 }}">{{ class.name }}</option>
+            {% else %}
+              <option value="{{ loop.index0 }}">{{ class.name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
 
         <label for="twitter">Twitter Username</label>
         <input id="twitter" name="twitter" type="text"
@@ -28,18 +56,14 @@
         <label for="youtube">Youtube Channel</label>
         <input id="youtube" name="youtube" type="text"
                value="{{ user.youtube }}">
-        <label for="facebook">Facebook Page</label>
-        <input id="facebook" name="facebook" type="text"
-               value="{{ user.facebook }}">
         <label for="website">Personal Website</label>
         <input id="website" name="website" type="text"
                value="{{ user.website }}">
-
-        <button type="submit">Submit</button>
-      </form>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
+
 
 <script src="https://cdn.quilljs.com/1.1.5/quill.js"></script>
 
@@ -58,12 +82,23 @@
     theme: 'snow'
   });
 
+  // this gets the content from Quill
+  // and replaces a hidden textarea's contents with
+  // the contents of Quill
   function processForm(e) {
     var profileBlurb = quill.root.innerHTML;
     console.log(profileBlurb);
     document.getElementById("profile-blurb").value = profileBlurb;
   }
 
+  // Avatar Preview
+  var loadFile = function (event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
+
+  // attach event listener
+  // needed so we can submit the content from the Quill editor
   var form = document.getElementById('profile-form');
   if (form.attachEvent) {
     form.attachEvent("submit", processForm);

@@ -40,3 +40,22 @@ $categoryMenuArray = [
         "selected" => false,
     ],
 ];
+
+$classList = [
+    0 => [
+        "value" => "builder",
+        "name" => "Builder",
+    ],
+    1 => [
+        "value" => "architect",
+        "name" => "Architect",
+    ],
+    2 => [
+        "value" => "engineer",
+        "name" => "Engineer",
+    ],
+    3 => [
+        "value" => "artist",
+        "name" => "Artist",
+    ]
+];
