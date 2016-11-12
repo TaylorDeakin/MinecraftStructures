@@ -32,7 +32,6 @@ $app->group('/account', function () use ($app) {
         }
         $counter = 0;
         while (($data = $result->fetch_assoc()) != null) {
-            var_dump($data);
             if ($data['name']) {
                 $structures[$counter] = $data;
                 $counter++;
@@ -45,6 +44,10 @@ $app->group('/account', function () use ($app) {
                     "title" => $data['title'],
                     "profileImage" => $data['image'],
                     "blurb" => $data['profiletext'],
+                    "twitter" => $data['twitter'],
+                    "facebook" => $data['facebook'],
+                    "youtube" => $data['youtube'],
+                    "website" => $data['website']
                 ];
             }
 
@@ -68,7 +71,7 @@ $app->group('/account', function () use ($app) {
         }
 
         $data = $result->fetch_assoc();
-        return $this->renderer->render($response, 'account/editor.twig', [
+        return $this->renderer->render($response, 'account/profile-editor.twig', [
             'user' => $data,
             'loggedIn' => $session->loggedIn
         ]);
@@ -84,7 +87,6 @@ $app->group('/account', function () use ($app) {
         $facebook = mysqli_real_escape_string($conn, $_POST['facebook']);
         $website = mysqli_real_escape_string($conn, $_POST['website']);
         $title = "";//mysqli_real_escape_string($conn, $_POST['title']);
-
 
         $query = "UPDATE users
                   SET profiletext='$profiletext',twitter='$twitter',youtube='$youtube',facebook='$facebook',website='$website',title='$title'

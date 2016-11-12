@@ -11,19 +11,47 @@
   <section class="row">
     <aside class="sidebar profile column column-25">
       <div class="profile-header">
-        <img class="profile-img" src="{{ user.profileImage }}" alt="{{ user.username }}">
+        {% if user.profileImage %}
+          <img src="{{ user.profileImage }}" alt="{{ user.username }}" class="profile-img">
+        {% else %}
+          <img src="https://minotar.net/avatar/{{ user.username }}" alt="{{ user.username }}" class="profile-img">
+        {% endif %}
         <div class="profile-box">
           <h4>{{ user.username }}</h4>
           <p class="profile-title">Level {{ user.level }}: {{ user.title }}</p>
         </div>
       </div>
       <h3>About</h3>
-      <p>{{ user.blurb }}</p>
-      <ul class="list-unstyled">
-        {% for socialItem in user.socialLinks %}
-          <li><a href="{{ socialItem.url }}">{{ socialItem.name }}</a></li>
-        {% endfor %}
-      </ul>
+      <p>{{ user.blurb|raw }}</p>
+
+      {% if user.twitter %}
+        <a href="http://twitter.com/{{ user.twitter }}">
+          <svg class="icon icon-twitter">
+            <use xlink:href="/icons.svg#icon-twitter"></use>
+          </svg>
+        </a>
+      {% endif %}
+      {% if user.facebook %}
+        <a href="http://facebook.com/{{ user.facebook }}">
+          <svg class="icon icon-facebook">
+            <use xlink:href="/icons.svg#icon-facebook"></use>
+          </svg>
+        </a>
+      {% endif %}
+      {% if user.youtube %}
+        <a href="http://youtube.com/{{ user.youtube }}">
+          <svg class="icon icon-youtube">
+            <use xlink:href="/icons.svg#icon-youtube"></use>
+          </svg>
+        </a>
+      {% endif %}
+      {% if user.website %}
+        <a href="{{ user.website }}">
+          <svg class="icon icon-website">
+            <use xlink:href="/icons.svg#icon-website"></use>
+          </svg>
+        </a>
+      {% endif %}
       <h3>User Stats</h3>
       <ul class="list-unstyled">
         <li><span class="text-emphasis">{{ structureList|length }}</span> Structures</li>

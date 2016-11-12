@@ -659,6 +659,9 @@ input {
 .full-height {
   height: 100%; }
 
+.button-block {
+  width: 100%; }
+
 /**
  * wallop.css
  *
@@ -876,5 +879,21 @@ input {
       .navbar-browse nav a.active {
         border-bottom: 3px solid #2196F3;
         color: #2196F3; }
+
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin: 8px;
+  padding: 4px; }
+
+.icon-twitter {
+  fill: #1DA1F2; }
+  .icon-twitter:hover, .icon-twitter:focus {
+    fill: #fff;
+    background: #1DA1F2; }
+
+.icon-youtube:hover, .icon-youtube:focus {
+  fill: #cd201f; }
 
 /*# sourceMappingURL=main.css.map */

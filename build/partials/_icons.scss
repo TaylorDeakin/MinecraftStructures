@@ -1,0 +1,39 @@
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin: 8px;
+  padding: 4px;
+}
+
+.icon-twitter {
+  fill: #1DA1F2;
+
+  &:hover, &:focus {
+    fill: #fff;
+    background: #1DA1F2;
+  }
+}
+
+.icon-facebook{
+
+
+  &:hover, &:focus{
+
+  }
+}
+
+.icon-youtube{
+
+  &:hover, &:focus{
+    fill: #cd201f;
+
+  }
+}
+
+.icon-website{
+
+  &:hover, &:focus{
+
+  }
+}

@@ -46,6 +46,15 @@
 <!-- Initialize Quill editor -->
 <script>
   var quill = new Quill('#editor', {
+    modules: {
+      toolbar: [
+
+        ['bold', 'italic', 'underline', 'link'],
+        [{color: []}, {background: []}],
+        [{list: 'ordered'}, {list: 'bullet'}],
+        ['clean']
+      ]
+    },
     theme: 'snow'
   });
 
