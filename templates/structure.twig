@@ -18,7 +18,7 @@
       <div class="row">
         <div class="column column-75">
           <div class="row">
-            <div class="column"><p>{{ current.description }}</p></div>
+            <div class="column"><p>{{ current.description|raw }}</p></div>
           </div>
 
         </div>
@@ -52,9 +52,6 @@
             <p>{{ structure.downloads }} Downloads</p>
           </div>
         </div>
-
-
-
       {% endfor %}
     </aside>
 

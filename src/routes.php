@@ -10,10 +10,9 @@ $app->get('/', function ($request, $response, $args) {
     global $categoryMenuArray;
     $session = $this->session;
 
-
     $query = "
     (SELECT s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -24,7 +23,7 @@ $app->get('/', function ($request, $response, $args) {
   UNION ALL
     (SELECT
     s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -34,7 +33,7 @@ $app->get('/', function ($request, $response, $args) {
   UNION ALL
     (SELECT
     s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -46,7 +45,7 @@ $app->get('/', function ($request, $response, $args) {
   UNION ALL
     (SELECT
     s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -58,7 +57,7 @@ $app->get('/', function ($request, $response, $args) {
   UNION ALL
     (SELECT
     s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -70,7 +69,7 @@ $app->get('/', function ($request, $response, $args) {
   UNION ALL
     (SELECT
     s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -82,7 +81,7 @@ $app->get('/', function ($request, $response, $args) {
   UNION ALL
     (SELECT
     s.name, s.id, s.description, s.mainImage, s.file, s.userid,
-    s.views, s.downloads, s.likes, s.tags, s.category, s.extraImages,
+    s.views, s.downloads, s.likes, s.tags, s.category,
     s.url, s.timestamp,  users.username,  users.image
     FROM
         structures s
@@ -103,6 +102,7 @@ $app->get('/', function ($request, $response, $args) {
 
         $i = 0;
         while (($row = $result->fetch_assoc()) != null) {
+            var_dump($row);
             if ($i < 5) {
                 $top[] = $row;
             } else if ($i < 10) {
@@ -144,6 +144,7 @@ $app->get('/', function ($request, $response, $args) {
 
         ]);
     } else {
+        echo(mysqli_error($conn));
         return $this->renderer->render($response, 'index.twig');
     }
 });
@@ -154,27 +155,30 @@ $app->get('/structure/{url}', function ($request, $response, $args) {
     $session = $this->session;
 
     $url = $args['url'];
+    var_dump($url);
     $url = mysqli_real_escape_string($conn, $url);
     // the current structure,  the user data
     // and other structures made by the user
     // limited to 7
-    $query =
-        "(SELECT name,  description,  mainImage,  file,  s.userid,  views,  downloads,  likes,  tags,  category,
-                 extraImages,  url,  timestamp,  users.username,  users.image,  users.title,  users.level
+    $query = "SELECT name,  description,  mainImage,  file,  s.userid,                      views,  downloads,  likes,  tags,  category,url,                       timestamp,  users.username,  users.image,  users.title,                users.level
+            FROM structures s
+            JOIN users on s.userid = users.userid
+            WHERE url = '$url'
+        UNION ALL
+            (SELECT name,  description,  mainImage,  file,  s.userid,              views,  downloads,  likes,  tags,  category,
+                    url,  timestamp,  users.username,  users.image,  users.title,  users.level
             FROM structures s
             JOIN users
               ON s.userid = users.userid
             WHERE s.userid IN
-            (
-            SELECT s.userid
+            (SELECT s.userid
             FROM structures s
-            WHERE url = '$url'
-            ) LIMIT 10)
-        UNION
-        SELECT structures,  usersOnline,  members,  downloads,  NULL ,  NULL ,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL
+            WHERE url = '$url') LIMIT 10)
+        UNION ALL
+        SELECT structures,  usersOnline,  members,  downloads,  NULL ,  NULL ,  NULL,  NULL,  NULL,    NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL
             FROM site
-        UNION
-        (SELECT name,  NULL ,  mainImage,  NULL,   s.userid,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  url,  timestamp,  users.username,  users.image,  users.title,  users.level
+        UNION ALL
+        (SELECT name,  NULL ,  mainImage,  NULL,   s.userid,  NULL,  NULL,  NULL,  NULL,  NULL,  url,  timestamp,  users.username,  users.image,  users.title,  users.level
             FROM structures s
             JOIN users
               ON s.userid = users.userid
@@ -188,6 +192,7 @@ $app->get('/structure/{url}', function ($request, $response, $args) {
 
     if ($result = $conn->query($query)) {
         while (($data = $result->fetch_assoc()) != null) {
+            var_dump($data);
             // this is site data,  because userid is null
             if ($data['username'] == null) {
                 $siteData['structures'] = $data['name'];
@@ -219,13 +224,10 @@ $app->get('/structure/{url}', function ($request, $response, $args) {
                 if (!is_null($author))
                     $latestStructures[] = $data;
             }
-
-
         }
     } else {
         die('there was an error: ' . $conn->error);
     }
-
     return $this->renderer->render($response, 'structure.twig', [
         'current' => $currentStructure,
         'otherStructures' => $otherStructures,
@@ -307,7 +309,7 @@ $app->get('/category/{category}', function ($request, $response, $args) {
     s.likes,
     s.tags,
     s.category,
-    s.extraImages,
+
     s.url,
     s.timestamp,
     users.username,

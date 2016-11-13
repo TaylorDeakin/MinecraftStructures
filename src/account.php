@@ -11,6 +11,7 @@ $auth = function ($request, $response, $next) {
 };
 
 $app->group('/account', function () use ($app) {
+
     // main dashboard
     $app->get('/dashboard', function ($request, $response, $args) {
         global $conn;
@@ -96,6 +97,7 @@ $app->group('/account', function () use ($app) {
 
     });
 
+    // structure creation - GET
     $app->get('/structure/create', function ($request, $response, $args) {
         $session = $this->session;
         global $categoryMenuArray;
@@ -109,12 +111,20 @@ $app->group('/account', function () use ($app) {
 
     $app->get('/structure/edit/{id}', function ($request, $response, $args) {
         global $conn;
+        global $categoryMenuArray;
         $session = $this->session;
 
         $id = mysqli_real_escape_string($conn, $args['id']);
+
+        $session->currentlyEditing = $id;
+
         $query = "SELECT * FROM structures JOIN users ON users.userid=structures.userid WHERE id='$id'";
 
-        $data = $conn->query($query);
+        if (($result = mysqli_query($conn, $query)) === false) {
+            die("error to be handled" . mysqli_error($conn));
+        }
+
+        $data = $result->fetch_assoc();
 
         // check that the structure was made by the same person
         // who now wants to edit it
@@ -123,10 +133,17 @@ $app->group('/account', function () use ($app) {
             // TODO: handle this better
         }
 
+        return $this->renderer->render($response, 'account/structure-editor.twig', [
+            'editing' => true,
+            'structure' => $data,
+            'categoryList' => $categoryMenuArray
+
+        ]);
+
 
     });
 
-    // profile submission
+    // profile submission - POST (form handling)
     $app->post('/dashboard/submit', function ($request, $response, $args) {
         global $conn;
         $session = $this->session;
@@ -176,16 +193,15 @@ $app->group('/account', function () use ($app) {
         }
 
     });
-    // structure creation
+    // structure creation - POST (form handling)
     $app->post('/structure/create', function ($request, $response, $args) {
         global $conn;
+        $session = $this->session;
 
         $name = mysqli_real_escape_string($conn, $_POST['structureName']);
         $description = mysqli_real_escape_string($conn, $_POST['structureDescription']);
         $tags = mysqli_real_escape_string($conn, $_POST['structureTags']);
         $category = mysqli_real_escape_string($conn, $_POST['structureCategory']);
-
-        $session = $this->session;
 
         // just so they're set
         $structureImage = $structureFile = null;
@@ -195,11 +211,6 @@ $app->group('/account', function () use ($app) {
             if (!$_FILES['structureImage']['error']) {
                 $structureImage = strtolower($_FILES['structureImage']['name']);
                 $valid = true;
-
-                if ($_FILES['structureImage']['size'] > (204800)) {
-                    $valid = false;
-                    $message = "file size too large";
-                }
 
                 if ($valid) {
                     move_uploaded_file($_FILES['structureImage']['tmp_name'], '../public/img/' . $structureImage);
@@ -225,20 +236,69 @@ $app->group('/account', function () use ($app) {
         $query = "INSERT INTO structures (name,  description, mainImage, file, userid, tags, category, url, timestamp) VALUES ('$name', '$description', '$structureImage', '$structureFile','$session->userid','$tags', '$category', '$url',NOW())";
 
 
-        if(mysqli_query($conn, $query) === false){
+        if (mysqli_query($conn, $query) === false) {
             // handle error
             die('I have an error: ' . mysqli_error($conn));
         }
 
     });
+    // structure update - POST (form handling)
+    $app->post('/structure/update', function ($request, $response, $args) {
+        global $conn;
+        $session = $this->session;
+        $valid = false;
+        $name = mysqli_real_escape_string($conn, $_POST['structureName']);
+        $description = mysqli_real_escape_string($conn, $_POST['structureDescription']);
+        $tags = mysqli_real_escape_string($conn, $_POST['structureTags']);
+        $category = mysqli_real_escape_string($conn, $_POST['structureCategory']);
+
+        // just so they're set
+        $structureImage = null;
+
+        if ($_FILES['structureImage']['name']) {
+
+            if (!$_FILES['structureImage']['error']) {
+                $structureImage = strtolower($_FILES['structureImage']['name']);
+                $valid = true;
+
+                if ($valid) {
+                    move_uploaded_file($_FILES['structureImage']['tmp_name'], '../public/img/' . $structureImage);
+                }
+            }
+        }
+
+        if ($valid) {
+            $query = "UPDATE structures
+                  SET name='$name', description='$description', tags='$tags',   category='$category', mainImage='$structureImage'
+                  WHERE id='$session->currentlyEditing'";
+        } else {
+            $query = "UPDATE structures
+                  SET name='$name', description='$description', tags='$tags',   category='$category'
+                  WHERE id='$session->currentlyEditing'";
+        }
+
+        if (!mysqli_query($conn, $query)) {
+            die("need better error messages" . $conn->error);
+        } else {
+            $session->message = "Success! Your structure has been successfully edited";
+
+            return $response->withStatus(302)->withHeader('Location', '/account/dashboard');
+        }
+
+
+    });
 
 })->add($auth);
-
+/**
+ * @param $name
+ * @return mixed|string
+ */
 function urlify($name)
 {
-
-    $url = "23";
-
+    $url = preg_replace("#[[:punct:]]#", "", $name);
+    $url = strtolower($name);
+    $url = str_replace(" ", "-", $url);
+    $url = substr($url, 0, 30);
 
     return $url;
 }

@@ -22,13 +22,14 @@
   {% if not editing %}
   <form action="/account/structure/create" method="post" id="structureForm" enctype="multipart/form-data">
     {% else %}
-    <form action="/account/structure/submit" method="post" id="structureForm" enctype="multipart/form-data">
+    <form action="/account/structure/update" method="post" id="structureForm" enctype="multipart/form-data">
       {% endif %}
       <div class="row">
         <div class="column column-75">
 
           <label for="structureName">Structure Name</label>
-          <input id="structureName" name="structureName" type="text" class="input-fullwidth">
+          <input id="structureName" name="structureName" type="text" class="input-fullwidth"
+                 value="{{ structure.name }}">
           <label for="structureDescription">Structure Description</label>
           <textarea name="structureDescription" id="structureDescription" cols="30" rows="10" hidden></textarea>
           <!-- Create the editor container -->
@@ -39,18 +40,31 @@
           <label for="structureTags">Structure Tags</label>
           <small>Keywords that describe your structure. Separate them with commas</small>
           <br>
-          <input class="input-fullwidth" name="structureTags" id="structureTags" type="text">
+          <input class="input-fullwidth" name="structureTags" id="structureTags" type="text" value="{{ structure.tags }}">
           <button type="submit">Submit</button>
         </div>
         <div class="column">
           <!-- structure image-->
-          <img class="img-main" src="" id="structureImage">
+          {% if structure.mainImage %}
+            <img class="img-main" src="/img/{{ structure.mainImage }}" id="structureImage">
+          {% else %}
+            <img class="img-main" id="structureImage" src="">
+          {% endif %}
+
           <label for="structureImage">Structure Image</label>
-          <input id="structureImage" name="structureImage" type="file"
-                 onchange="loadFile(event)">
+          {% if structure.mainImage %}
+            <small>{{ structure.mainImage }}</small>
+          {% endif %}
+          <input id="structureImage" name="structureImage" type="file" onchange="loadFile(event)">
           <!-- structure file-->
           <label for="structureFile">Structure File</label>
-          <input id="structureFile" name="structureFile" type="file">
+          {% if structure.file %}
+            <p>{{ structure.file }}</p>
+
+          {% else %}
+            <input id="structureFile" name="structureFile" type="file" value="{{ structure.file }}">
+          {% endif %}
+
           <!-- category -->
           <label for="structureCategory">Category</label>
           <select name="structureCategory" id="structureCategory">
