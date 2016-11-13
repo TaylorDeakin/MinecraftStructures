@@ -21,7 +21,7 @@
           <p class="profile-title">Level {{ user.level }}: {{ user.title }}</p>
         </div>
       </div>
-      <h3>About</h3>
+      <!--<h3>About</h3>
       <p>{{ user.blurb|raw }}</p>
 
       {% if user.twitter %}
@@ -51,19 +51,23 @@
             <use xlink:href="/icons.svg#icon-website"></use>
           </svg>
         </a>
-      {% endif %}
-      <a href="/account/dashboard/edit" class="button button-block" role="button">Edit Profile</a>
-      <h3>User Stats</h3>
+      {% endif %}-->
+      <h3>My Statistics</h3>
       <ul class="list-unstyled">
         <li><span class="text-emphasis">{{ structureList|length }}</span> Structures</li>
-        <li><span class="text-emphasis">819</span> Likes</li>
-        <li><span class="text-emphasis">675</span> Downloads</li>
-        <li></li>
-        <li></li>
+        <li><span class="text-emphasis">{{ user.stats.views }}</span> Views</li>
+        <li><span class="text-emphasis">{{ user.stats.downloads }}</span> Downloads</li>
+        <li><span class="text-emphasis">{{ user.stats.likes }}</span> Likes</li>
       </ul>
-
+      <h3>Actions</h3>
+      <ul class="list-unstyled">
+        <li><a href="/account/structure/create">Submit a Structure</a></li>
+        <li><a href="/account/dashboard/edit" class="" role="button">Edit Your Profile</a></li>
+        <li><a href="/account/dashboard/settings" class="">Edit Account Settings</a></li>
+      </ul>
     </aside>
     <div class="column">
+      <h2>My Structures</h2>
       {% if structureList|length > 0 %}
         {% for structure in structureList if structure.name %}
           <div class="row list-box">

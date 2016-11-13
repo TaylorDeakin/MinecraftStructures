@@ -27,14 +27,26 @@ $app->group('/account', function () use ($app) {
 
         $structures = [];
         $user = [];
+
+        $userStats = [
+            "likes" => 0,
+            "downloads" => 0,
+            "views" => 0,
+        ];
+
         if (!($result = $conn->query($query))) {
             die('there was an error [' . $conn->error . ']');
         }
         $counter = 0;
         while (($data = $result->fetch_assoc()) != null) {
+            // has name column, ergo is structure
             if ($data['name']) {
                 $structures[$counter] = $data;
                 $counter++;
+
+                $userStats['likes'] += $data['likes'];
+                $userStats['downloads'] += $data['downloads'];
+                $userStats['views'] += $data['views'];
             }
 
             if (empty($user)) {
@@ -47,11 +59,13 @@ $app->group('/account', function () use ($app) {
                     "twitter" => $data['twitter'],
                     "facebook" => $data['facebook'],
                     "youtube" => $data['youtube'],
-                    "website" => $data['website']
+                    "website" => $data['website'],
+                    "class" => $data['class']
                 ];
             }
-
         }
+
+        $user['stats'] = $userStats;
 
         return $this->renderer->render($response, 'account/dashboard.twig', [
             'user' => $user,
