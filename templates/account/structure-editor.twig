@@ -11,32 +11,60 @@
 
 <div class="container">
   <div class="row">
-    <div class="column"><h2>Submit a New Structure:</h2></div>
-  </div>
-  <form action="/account/structure/submit" method="post">
-    <div class="row">
-      <div class="column column-75">
-        <label for="structureName">Structure Name</label>
-        <input id="structureName" name="structureName" type="text" class="input-fullwidth">
-        <label for="structureDescription">Structure Description</label>
-        <textarea name="structureDescription" id="structureDescription" cols="30" rows="10" hidden></textarea>
-        <!-- Create the editor container -->
-        <div id="editor">
-          {{ structure.description|raw }}
-        </div>
-
-        <button type="submit">Submit</button>
-      </div>
+    {% if not editing %}
+      <div class="column"><h2>Submit a New Structure:</h2></div>
+    {% else %}
       <div class="column">
-        <!-- structure image-->
-        <label for="structureImage">Structure Image</label>
-        <input id="structureImage" name="structureImage" type="file">
-        <!-- structure file-->
-        <label for="structureFile">Structure File</label>
-        <input id="structureFile" name="structureFile" type="file">
+        <h2>Edit Your Structure</h2>
       </div>
-    </div>
-  </form>
+    {% endif %}
+  </div>
+  {% if not editing %}
+  <form action="/account/structure/create" method="post" id="structureForm" enctype="multipart/form-data">
+    {% else %}
+    <form action="/account/structure/submit" method="post" id="structureForm" enctype="multipart/form-data">
+      {% endif %}
+      <div class="row">
+        <div class="column column-75">
+
+          <label for="structureName">Structure Name</label>
+          <input id="structureName" name="structureName" type="text" class="input-fullwidth">
+          <label for="structureDescription">Structure Description</label>
+          <textarea name="structureDescription" id="structureDescription" cols="30" rows="10" hidden></textarea>
+          <!-- Create the editor container -->
+          <div id="editor">
+            {{ structure.description|raw }}
+          </div>
+          <!-- tags -->
+          <label for="structureTags">Structure Tags</label>
+          <small>Keywords that describe your structure. Separate them with commas</small>
+          <br>
+          <input class="input-fullwidth" name="structureTags" id="structureTags" type="text">
+          <button type="submit">Submit</button>
+        </div>
+        <div class="column">
+          <!-- structure image-->
+          <img class="img-main" src="" id="structureImage">
+          <label for="structureImage">Structure Image</label>
+          <input id="structureImage" name="structureImage" type="file"
+                 onchange="loadFile(event)">
+          <!-- structure file-->
+          <label for="structureFile">Structure File</label>
+          <input id="structureFile" name="structureFile" type="file">
+          <!-- category -->
+          <label for="structureCategory">Category</label>
+          <select name="structureCategory" id="structureCategory">
+            {% for category in categoryList %}
+              {% if structure.category == loop.index0 %}
+                <option selected value="{{ loop.index0 }}">{{ category.name }}</option>
+              {% else %}
+                <option value="{{ loop.index0 }}">{{ category.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </form>
 </div>
 
 
@@ -57,17 +85,20 @@
   });
 
   function processForm(e) {
-    var profileBlurb = quill.root.innerHTML;
-    console.log(profileBlurb);
-    document.getElementById("profile-blurb").value = profileBlurb;
+    document.getElementById("structureDescription").value = quill.root.innerHTML;
   }
 
-  var form = document.getElementById('profile-form');
+  var form = document.getElementById('structureForm');
   if (form.attachEvent) {
     form.attachEvent("submit", processForm);
   } else {
     form.addEventListener("submit", processForm);
   }
+  // image preview
+  var loadFile = function (event) {
+    var output = document.getElementById('structureImage');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
 
 </script>
 </body>

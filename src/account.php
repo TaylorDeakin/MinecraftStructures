@@ -84,7 +84,7 @@ $app->group('/account', function () use ($app) {
         if (!($result = mysqli_query($conn, $query))) {
             die("MYSQL ERROR: " . mysqli_error($conn));
         }
-        if($session->message){
+        if ($session->message) {
             var_dump($session->message);
         }
         $data = $result->fetch_assoc();
@@ -98,9 +98,11 @@ $app->group('/account', function () use ($app) {
 
     $app->get('/structure/create', function ($request, $response, $args) {
         $session = $this->session;
+        global $categoryMenuArray;
 
         return $this->renderer->render($response, 'account/structure-editor.twig', [
-            'loggedIn' => $session->loggedIn
+            'loggedIn' => $session->loggedIn,
+            'categoryList' => $categoryMenuArray
         ]);
 
     });
@@ -137,7 +139,6 @@ $app->group('/account', function () use ($app) {
         $valid = false;
         $filename = "";
 
-        echo(__DIR__);
         if ($_FILES['avatar']['name']) {
 
             if (!$_FILES['avatar']['error']) {
@@ -177,8 +178,67 @@ $app->group('/account', function () use ($app) {
     });
     // structure creation
     $app->post('/structure/create', function ($request, $response, $args) {
+        global $conn;
+
+        $name = mysqli_real_escape_string($conn, $_POST['structureName']);
+        $description = mysqli_real_escape_string($conn, $_POST['structureDescription']);
+        $tags = mysqli_real_escape_string($conn, $_POST['structureTags']);
+        $category = mysqli_real_escape_string($conn, $_POST['structureCategory']);
+
+        $session = $this->session;
+
+        // just so they're set
+        $structureImage = $structureFile = null;
+
+        if ($_FILES['structureImage']['name']) {
+
+            if (!$_FILES['structureImage']['error']) {
+                $structureImage = strtolower($_FILES['structureImage']['name']);
+                $valid = true;
+
+                if ($_FILES['structureImage']['size'] > (204800)) {
+                    $valid = false;
+                    $message = "file size too large";
+                }
+
+                if ($valid) {
+                    move_uploaded_file($_FILES['structureImage']['tmp_name'], '../public/img/' . $structureImage);
+                }
+            }
+        }
+
+        if ($_FILES['structureFile']['name']) {
+
+            if (!$_FILES['structureFile']['error']) {
+                $structureFile = strtolower($_FILES['structureFile']['name']);
+                $valid = true;
+
+                if ($valid) {
+                    move_uploaded_file($_FILES['structureFile']['tmp_name'], '../public/structures/' . $structureFile);
+                }
+            }
+        }
+
+        $url = urlify($name);
+
+
+        $query = "INSERT INTO structures (name,  description, mainImage, file, userid, tags, category, url, timestamp) VALUES ('$name', '$description', '$structureImage', '$structureFile','$session->userid','$tags', '$category', '$url',NOW())";
+
+
+        if(mysqli_query($conn, $query) === false){
+            // handle error
+            die('I have an error: ' . mysqli_error($conn));
+        }
 
     });
 
 })->add($auth);
 
+function urlify($name)
+{
+
+    $url = "23";
+
+
+    return $url;
+}
